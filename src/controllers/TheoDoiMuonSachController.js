@@ -106,9 +106,40 @@ const TheoDoiMuonSachController = {
 
       if (dangMuon) {
         return res.status(400).json({
-          message: "Bạn đang mượn cuốn sách này nhưng chưa trả!",
+          message: "Bạn đang mượn quyển sách này nhưng chưa trả!",
         });
       }
+
+      // Giới hạn 3 cuốn: pending + borrowed
+      const soDangMuon = await TheoDoiMuonSach.countDocuments({
+        MADOCGIA,
+        TRANGTHAI: { $in: ["pending", "borrowed"] },
+      });
+
+      if (soDangMuon >= 3) {
+        return res.status(400).json({
+          message:
+            "Bạn chỉ được mượn tối đa 3 quyển sách (gồm sách đăng ký và sách đang mượn).",
+        });
+      }
+
+      // Không cho mượn nếu đang có sách quá hạn
+      const ngayHienTai = new Date();
+
+      const quaHan = await TheoDoiMuonSach.findOne({
+        MADOCGIA,
+        TRANGTHAI: "borrowed",
+        HANTRA: { $lt: ngayHienTai }, // hạn trả < hôm nay
+      });
+
+      if (quaHan) {
+        return res.status(400).json({
+          message:
+            "Bạn đang có sách quá hạn, vui lòng trả sách trước khi mượn thêm!",
+        });
+      }
+
+      //tạo phiếu đăng ký
 
       const newRecord = new TheoDoiMuonSach({
         MADOCGIA,
@@ -153,9 +184,9 @@ const TheoDoiMuonSachController = {
       record.HANTRA = new Date(
         ngay.getFullYear(),
         ngay.getMonth(),
-        ngay.getDate() + 14,
-        17,
-        0,
+        ngay.getDate() + 0,
+        22,
+        56,
         0,
         0
       );
