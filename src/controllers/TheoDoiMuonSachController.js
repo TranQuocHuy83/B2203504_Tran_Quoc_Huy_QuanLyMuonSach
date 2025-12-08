@@ -184,9 +184,9 @@ const TheoDoiMuonSachController = {
       record.HANTRA = new Date(
         ngay.getFullYear(),
         ngay.getMonth(),
-        ngay.getDate() + 0,
-        22,
-        56,
+        ngay.getDate() + 14,
+        17,
+        0,
         0,
         0
       );

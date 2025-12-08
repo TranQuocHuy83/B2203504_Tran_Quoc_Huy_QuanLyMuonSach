@@ -12,7 +12,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router"; // <-- cần import
 import AppHeader from "./components/AppHeader.vue";
 import Footer from "./components/Footer.vue";
-import Chatbot from "./components/Chatbot.vue";
+//import Chatbot from "./components/Chatbot.vue";
 // Chỉ hiển thị header khi không phải trang SachDetail
 const route = useRoute(); // <-- khai báo route
 const showHeader = computed(
